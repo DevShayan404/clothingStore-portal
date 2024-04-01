@@ -1,0 +1,43 @@
+<nz-layout class="dashboard_main">
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
+    <div class="logo"></div>
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li nz-menu-item routerLink="/Dashboard">
+        <span nz-icon nzType="appstore" style="font-size: 1.1rem"></span>
+        <span>Dashboard</span>
+      </li>
+      <li nz-menu-item routerLink="/categories">
+        <span nz-icon nzType="block" style="font-size: 1.1rem"></span>
+        <span>Categories</span>
+      </li>
+      <li nz-menu-item routerLink="/categories-items">
+        <span nz-icon nzType="gold" style="font-size: 1.1rem"></span>
+        <span>Category Items </span>
+      </li>
+      <li nz-menu-item>
+        <span nz-icon nzType="gold" style="font-size: 1.1rem"></span>
+        <span>Products</span>
+      </li>
+      <li nz-menu-item>
+        <span nz-icon nzType="gold" style="font-size: 1.1rem"></span>
+        <span>Products Detail</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="trigger">
+        <span
+          class=""
+          nz-icon
+          [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          (click)="isCollapsed = !isCollapsed"
+        ></span>
+      </div>
+    </nz-header>
+    <nz-content>
+        <router-outlet></router-outlet>
+    </nz-content>
+    <!-- <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer> -->
+  </nz-layout>
+</nz-layout>

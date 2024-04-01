@@ -1,0 +1,85 @@
+nz-breadcrumb {
+  margin: 10px 0;
+}
+::ng-deep.ant-space {
+  width: 100%;
+}
+
+.inner-content {
+  padding: 10px 24px;
+  background: #fff;
+  display: flex;
+  flex-flow: column nowrap;
+  /* gap: 12px; */
+  min-height: 80vh;
+  max-height: 80vh;
+  overflow: hidden;
+  /* overflow-y: auto; */
+}
+::ng-deep.ant-page-header {
+  padding: 10px 0;
+  margin-bottom: 5px;
+}
+::ng-deep.ant-page-header-heading-left {
+  display: flex;
+  align-items: flex-end !important;
+  margin: 0;
+  overflow: hidden;
+}
+.ant-tag,
+.ant-tag a,
+.ant-tag a:hover {
+  margin-bottom: 5px;
+}
+::ng-deep.ant-page-header-heading-title {
+  margin-right: 8px;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 40px;
+}
+::ng-deep.ant-select {
+  width: 200px;
+}
+
+::ng-deep.ant-table.ant-table-middle .ant-table-tbody > tr > td {
+  padding: 8px 8px;
+}
+::ng-deep.ant-table-pagination.ant-pagination {
+  /* display: none; */
+}
+::ng-deep.custom_upload.ant-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.activeButton {
+  border: 1px solid red;
+  /* color: red; */
+}
+::ng-deep.ant-form-item {
+  margin: 0;
+}
+
+::ng-deep.custom_upload.ant-btn,
+.ant-btn > span,
+.ant-scroll-number-only {
+  margin: 0;
+}
+.edit_avatar {
+  position: relative;
+}
+.edit_avatar span {
+  position: absolute;
+  top: -15%;
+  right: -15%;
+  font-size: 0.6rem;
+  border-radius: 100%;
+  padding: 3px;
+  background-color: #ff0e0e;
+  color: #fff;
+  cursor: pointer;
+}
+
+.has_error {
+  border: 2px solid red;
+}

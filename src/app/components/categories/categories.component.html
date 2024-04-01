@@ -1,0 +1,257 @@
+<section>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>User</nz-breadcrumb-item>
+    <nz-breadcrumb-item>Bill</nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <div class="inner-content">
+    <nz-page-header>
+      <nz-page-header-title>Categories</nz-page-header-title>
+      <nz-page-header-tags>
+        <nz-tag *ngIf="listOfData.length <= 10"
+          >0{{ listOfData.length }}</nz-tag
+        >
+        <nz-tag *ngIf="listOfData.length >= 10">{{ listOfData.length }}</nz-tag>
+      </nz-page-header-tags>
+      <nz-page-header-extra>
+        <nz-space>
+          <nz-select
+            *nzSpaceItem
+            nzShowSearch
+            nzAllowClear
+            nzPlaceHolder="Select a category"
+            [(ngModel)]="searchTerm"
+          >
+            <nz-option
+              *ngFor="let data of listOfData"
+              [nzLabel]="data.categoryName"
+              [nzValue]="data.categoryName"
+            ></nz-option>
+          </nz-select>
+          <button
+            *nzSpaceItem
+            nz-button
+            nzType="primary"
+            (click)="showAddProduct()"
+          >
+            Add New Category
+          </button>
+        </nz-space>
+      </nz-page-header-extra>
+    </nz-page-header>
+    <nz-table
+      #editRowTable
+      nzBordered
+      nzSize="middle"
+      [nzPageSize]="5"
+      nzTableLayout="fixed"
+      [nzScroll]="{ y: '52vh' }"
+      nzShowPagination
+      [nzData]="listOfData"
+      [nzLoading]="loading"
+    >
+      <thead>
+        <tr>
+          <th nzWidth="80%">Categories</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="isVisible">
+          <ng-container>
+            <td>
+              <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm">
+                <div
+                  nz-space
+                  nzAlign="center"
+                  class="space-align-block"
+                  nzSize="middle"
+                >
+                  <div *nzSpaceItem>
+                    <nz-upload
+                      *ngIf="validateForm.get('fileUpload')?.invalid === true"
+                      [nzBeforeUpload]="beforeUpload"
+                    >
+                      <button
+                        nz-button
+                        class="custom_upload"
+                        [ngClass]="{
+                          activeButton:
+                            validateForm.get('fileUpload')?.invalid &&
+                            validateForm.get('fileUpload')?.touched
+                        }"
+                      >
+                        <nz-spin
+                          *ngIf="fileUploadedSpinner"
+                          nzSimple
+                          [nzSize]="'small'"
+                        ></nz-spin>
+                        <span
+                          *ngIf="!fileUploadedSpinner"
+                          nz-icon
+                          nzType="upload"
+                        ></span>
+                        <span>Select File</span>
+                      </button>
+                    </nz-upload>
+                    <nz-avatar
+                      *ngIf="validateForm.get('fileUpload')?.invalid === false"
+                      [nzShape]="'square'"
+                      [nzSize]="'large'"
+                      [nzSrc]="this.validateForm.get('fileUpload')?.value"
+                    ></nz-avatar>
+                  </div>
+
+                  <div *nzSpaceItem>
+                    <nz-form-item>
+                      <nz-form-control>
+                        <input
+                          type="text"
+                          nz-input
+                          formControlName="categoryName"
+                          placeholder="Enter category name"
+                        />
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                </div>
+              </form>
+            </td>
+            <td>
+              <nz-space>
+                <a *nzSpaceItem class="save" (click)="addData()">Save</a>
+                <a *nzSpaceItem (click)="showAddProduct()">Cancel</a>
+              </nz-space>
+            </td>
+          </ng-container>
+        </tr>
+
+        <tr
+          *ngFor="
+            let data of editRowTable?.data || [] | searchFilter : searchTerm
+          "
+        >
+          <ng-container
+            *ngIf="!editCache[data.categoryId].edit; else editTemplate"
+          >
+            <td>
+              <div
+                nz-space
+                nzAlign="center"
+                class="space-align-block"
+                nzSize="middle"
+              >
+                <nz-avatar
+                  *nzSpaceItem
+                  [nzShape]="'square'"
+                  [nzSize]="'large'"
+                  [nzSrc]="data.src"
+                ></nz-avatar>
+                <span *nzSpaceItem>{{ data.categoryName }}</span>
+              </div>
+            </td>
+            <td>
+              <a (click)="startEdit(data.categoryId)"
+                ><span nz-icon nzType="edit" nzTheme="outline"></span
+              ></a>
+              <nz-divider nzType="vertical"></nz-divider>
+              <a
+                nz-popconfirm
+                nzPopconfirmTitle="Are you sure delete this category?"
+                (nzOnConfirm)="deleteCategory(data.categoryId)"
+                (nzOnCancel)="cancel()"
+                nzPopconfirmPlacement="left"
+                ><span nz-icon nzType="delete" nzTheme="outline"></span
+              ></a>
+            </td>
+          </ng-container>
+          <ng-template #editTemplate>
+            <td>
+              <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm">
+                <div
+                  nz-space
+                  nzAlign="center"
+                  class="space-align-block"
+                  nzSize="middle"
+                >
+                  <div *nzSpaceItem>
+                    <nz-upload
+                      [nzBeforeUpload]="beforeUpload"
+                      *ngIf="
+                        !image &&
+                        validateForm.get('fileUpload')?.invalid === true
+                      "
+                    >
+                      <button
+                        nz-button
+                        class="custom_upload"
+                        [ngClass]="{
+                          activeButton:
+                            validateForm.get('fileUpload')?.invalid &&
+                            validateForm.get('fileUpload')?.touched
+                        }"
+                      >
+                        <nz-spin
+                          *ngIf="fileUploadedSpinner"
+                          nzSimple
+                          [nzSize]="'small'"
+                        ></nz-spin>
+                        <span
+                          *ngIf="!fileUploadedSpinner"
+                          nz-icon
+                          nzType="upload"
+                        ></span>
+                        <span>Select File</span>
+                      </button>
+                    </nz-upload>
+                    <div class="edit_avatar" *ngIf="image">
+                      <nz-avatar
+                        [nzShape]="'square'"
+                        [nzSize]="'large'"
+                        [nzSrc]="data.src"
+                      ></nz-avatar>
+                      <span
+                        nz-icon
+                        nzType="close"
+                        nzTheme="outline"
+                        (click)="cancelImage(false)"
+                      ></span>
+                    </div>
+                    <nz-avatar
+                      *ngIf="validateForm.get('fileUpload')?.invalid === false"
+                      [nzShape]="'square'"
+                      [nzSize]="'large'"
+                      [nzSrc]="this.validateForm.get('fileUpload')?.value"
+                    ></nz-avatar>
+                  </div>
+                  <div *nzSpaceItem>
+                    <nz-form-item>
+                      <nz-form-control>
+                        <input
+                          type="text"
+                          nz-input
+                          [(ngModel)]="
+                            editCache[data.categoryId].data.categoryName
+                          "
+                          formControlName="categoryName"
+                          placeholder="Enter category name"
+                        />
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                </div>
+              </form>
+            </td>
+            <td>
+              <nz-space>
+                <a *nzSpaceItem (click)="saveEdit(data.categoryId)" class="save"
+                  >Save</a
+                >
+                <a *nzSpaceItem (click)="cancelEdit(data.categoryId)">Cancel</a>
+              </nz-space>
+            </td>
+          </ng-template>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</section>
